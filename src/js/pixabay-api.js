@@ -4,10 +4,10 @@ const API_KEY = '48211039-b5a5e94b0d08467a34362de56';
 const BASE_URL = 'https://pixabay.com/api/';
 
 /**
- * Виконує запит до API для отримання зображень.
- * @param {string} query - Пошуковий запит.
- * @param {number} page - Номер сторінки.
- * @returns {Promise<Object>} - Результати запиту.
+ * Выполняет запрос к API Pixabay.
+ * @param {string} query - Поисковый запрос.
+ * @param {number} page - Номер страницы.
+ * @returns {Promise<Object>} - Результаты запроса.
  */
 export async function fetchImages(query, page = 1) {
   const params = {

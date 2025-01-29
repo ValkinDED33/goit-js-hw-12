@@ -48,7 +48,7 @@ loadMoreBtn.addEventListener('click', async () => {
 
     renderGallery(data.hits);
 
-    if (page * 15 >= data.totalHits) {
+    if (data.hits.length < 15) {
       loadMoreBtn.classList.add('hidden');
       alert("We're sorry, but you've reached the end of search results.");
     }
