@@ -9,16 +9,18 @@ body {
 
 header {
   background-color: #fff;
-  padding: 20px 10px;
+  padding: 15px 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
+  display: flex;
+  justify-content: center;
 }
 
 #search-form {
   display: flex;
-  justify-content: center;
+  align-items: center;
   gap: 10px;
 }
 
@@ -28,6 +30,7 @@ header {
   border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
+  font-size: 14px;
 }
 
 button {
@@ -38,6 +41,7 @@ button {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  transition: background 0.3s;
 }
 
 button:hover {
@@ -46,9 +50,11 @@ button:hover {
 
 .gallery {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 5 колонок */
-  grid-auto-rows: auto;
-  gap: 20px;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+  ); /* Адаптивные колонки */
+  gap: 15px;
   padding: 20px;
   max-width: 1200px;
   margin: 20px auto;
@@ -58,36 +64,36 @@ button:hover {
   overflow: hidden;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background: #fff;
 }
 
 .gallery-item:hover {
   transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .gallery-item img {
   width: 100%;
-  height: auto;
+  height: 200px;
   object-fit: cover;
+  display: block;
 }
 
 .info {
   display: flex;
-  justify-content: space-between; /* Відображає елементи в один рядок */
-  align-items: center;
-  gap: 15px; /* Відступи між елементами */
+  justify-content: space-between;
   padding: 10px;
   background-color: #fff;
-  border-top: 1px solid #eee; /* Лінія для відокремлення тексту від зображення */
+  font-size: 12px;
+  border-top: 1px solid #eee;
 }
 
 .info p {
   margin: 0;
-  flex: 1; /* Дозволяє тексту розтягуватися вільно */
-  white-space: nowrap; /* Уникає переносу тексту */
-  overflow: hidden; /* Ховає текст, що не вміщується */
-  text-overflow: ellipsis; /* Додає "..." у випадку обрізання тексту */
-  font-size: 12px; /* Зменшений шрифт для інформації */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #loader {
@@ -108,27 +114,34 @@ button:hover {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  display: block;
   margin: 20px auto;
+  transition: background 0.3s;
 }
 
 .load-more:hover {
   background-color: #0056b3;
 }
 
-/* Адаптація для малих екранів */
+/* 📱 Адаптивная версия */
 @media (max-width: 768px) {
   .gallery {
-    grid-template-columns: repeat(2, 1fr); /* 2 колонки на малих екранах */
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(150px, 1fr)
+    ); /* Колонки адаптируются */
+  }
+
+  #search-input {
+    width: 200px;
   }
 
   .info {
-    flex-direction: column; /* Розташування елементів у стовпчик */
-    align-items: flex-start;
-    gap: 10px; /* Простір між рядками тексту */
+    flex-direction: column;
+    align-items: center;
   }
 
   .info p {
-    white-space: normal; /* Дозволяє перенос тексту на наступний рядок */
-    text-overflow: clip; /* Забирає "..." */
+    white-space: normal;
   }
 }
