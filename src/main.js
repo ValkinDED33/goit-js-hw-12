@@ -29,7 +29,6 @@ form.addEventListener('submit', async event => {
       alert('No images found. Try another query.');
       return;
     }
-
     renderGallery(data.hits);
     loadMoreBtn.classList.remove('hidden');
   } catch (error) {

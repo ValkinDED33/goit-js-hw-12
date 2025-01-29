@@ -9,7 +9,9 @@ export function renderGallery(images) {
       image => `
       <a href="${image.largeImageURL}" class="gallery-item">
         <img src="${image.webformatURL}" alt="${image.tags}" />
-        <div class="info">
+render-functions.js
+      
+  <div class="info">
           <span><strong>Likes:</strong> ${image.likes}</span>
           <span><strong>Views:</strong> ${image.views}</span>
           <span><strong>Comments:</strong> ${image.comments}</span>
