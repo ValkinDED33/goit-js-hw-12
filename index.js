@@ -1,7 +1,9 @@
 import{a as g}from"./assets/vendor-upsvKRUO.js";(function(){const t=document.createElement("link").relList;if(t&&t.supports&&t.supports("modulepreload"))return;for(const r of document.querySelectorAll('link[rel="modulepreload"]'))o(r);new MutationObserver(r=>{for(const s of r)if(s.type==="childList")for(const d of s.addedNodes)d.tagName==="LINK"&&d.rel==="modulepreload"&&o(d)}).observe(document,{childList:!0,subtree:!0});function a(r){const s={};return r.integrity&&(s.integrity=r.integrity),r.referrerPolicy&&(s.referrerPolicy=r.referrerPolicy),r.crossOrigin==="use-credentials"?s.credentials="include":r.crossOrigin==="anonymous"?s.credentials="omit":s.credentials="same-origin",s}function o(r){if(r.ep)return;r.ep=!0;const s=a(r);fetch(r.href,s)}})();const m="48211039-b5a5e94b0d08467a34362de56",p="https://pixabay.com/api/";async function u(e,t=1){const a={key:m,q:e,image_type:"photo",orientation:"horizontal",safesearch:!0,per_page:15,page:t};return(await g.get(p,{params:a})).data}function f(e){const t=document.querySelector("#gallery"),a=e.map(o=>`
       <a href="${o.largeImageURL}" class="gallery-item">
         <img src="${o.webformatURL}" alt="${o.tags}" />
-        <div class="info">
+render-functions.js
+      
+  <div class="info">
           <span><strong>Likes:</strong> ${o.likes}</span>
           <span><strong>Views:</strong> ${o.views}</span>
           <span><strong>Comments:</strong> ${o.comments}</span>
