@@ -1,0 +1,134 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  color: #333;
+  text-align: center;
+}
+
+header {
+  background-color: #fff;
+  padding: 20px 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+#search-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+#search-input {
+  padding: 10px;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 колонок */
+  grid-auto-rows: auto;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 20px auto;
+}
+
+.gallery-item {
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.gallery-item:hover {
+  transform: scale(1.05);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between; /* Відображає елементи в один рядок */
+  align-items: center;
+  gap: 15px; /* Відступи між елементами */
+  padding: 10px;
+  background-color: #fff;
+  border-top: 1px solid #eee; /* Лінія для відокремлення тексту від зображення */
+}
+
+.info p {
+  margin: 0;
+  flex: 1; /* Дозволяє тексту розтягуватися вільно */
+  white-space: nowrap; /* Уникає переносу тексту */
+  overflow: hidden; /* Ховає текст, що не вміщується */
+  text-overflow: ellipsis; /* Додає "..." у випадку обрізання тексту */
+  font-size: 12px; /* Зменшений шрифт для інформації */
+}
+
+#loader {
+  font-size: 16px;
+  color: #007bff;
+  margin: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+.load-more {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 20px auto;
+}
+
+.load-more:hover {
+  background-color: #0056b3;
+}
+
+/* Адаптація для малих екранів */
+@media (max-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr); /* 2 колонки на малих екранах */
+  }
+
+  .info {
+    flex-direction: column; /* Розташування елементів у стовпчик */
+    align-items: flex-start;
+    gap: 10px; /* Простір між рядками тексту */
+  }
+
+  .info p {
+    white-space: normal; /* Дозволяє перенос тексту на наступний рядок */
+    text-overflow: clip; /* Забирає "..." */
+  }
+}
