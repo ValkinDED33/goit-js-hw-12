@@ -4,10 +4,10 @@ const API_KEY = '48211039-b5a5e94b0d08467a34362de56';
 const BASE_URL = 'https://pixabay.com/api/';
 
 /**
- * Выполняет запрос к API Pixabay.
- * @param {string} query - Поисковый запрос.
- * @param {number} page - Номер страницы.
- * @returns {Promise<Object>} - Результаты запроса.
+ * Виконує запит до API для отримання зображень.
+ * @param {string} query - Пошуковий запит.
+ * @param {number} page - Номер сторінки.
+ * @returns {Promise<Object>} - Результати запиту або помилка.
  */
 export async function fetchImages(query, page = 1) {
   const params = {
@@ -20,6 +20,11 @@ export async function fetchImages(query, page = 1) {
     page,
   };
 
-  const response = await axios.get(BASE_URL, { params });
-  return response.data;
+  try {
+    const response = await axios.get(BASE_URL, { params });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching images:', error);
+    throw new Error('Failed to fetch images. Please try again later.');
+  }
 }

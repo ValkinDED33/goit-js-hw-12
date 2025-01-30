@@ -9,12 +9,18 @@ let query = '';
 let page = 1;
 
 const form = document.querySelector('#search-form');
+const searchInput = document.querySelector('#search-input');
 const loadMoreBtn = document.querySelector('#load-more');
+const gallery = document.querySelector('#gallery');
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
-  query = document.querySelector('#search-input').value.trim();
-  if (!query) return;
+  query = searchInput.value.trim();
+
+  if (!query) {
+    alert('Please enter a search term.');
+    return;
+  }
 
   clearGallery();
   page = 1;
@@ -29,6 +35,7 @@ form.addEventListener('submit', async event => {
       alert('No images found. Try another query.');
       return;
     }
+
     renderGallery(data.hits);
     loadMoreBtn.classList.remove('hidden');
   } catch (error) {
@@ -48,7 +55,11 @@ loadMoreBtn.addEventListener('click', async () => {
 
     renderGallery(data.hits);
 
-    if (data.hits.length < 15) {
+    // Плавна прокрутка
+    const cardHeight = gallery.firstElementChild.getBoundingClientRect().height;
+    window.scrollBy({ top: cardHeight * 2, behavior: 'smooth' });
+
+    if (page * 15 >= data.totalHits) {
       loadMoreBtn.classList.add('hidden');
       alert("We're sorry, but you've reached the end of search results.");
     }

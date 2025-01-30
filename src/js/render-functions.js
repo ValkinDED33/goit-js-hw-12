@@ -1,14 +1,10 @@
-/**
- * Отображает изображения в галерее.
- * @param {Array} images - Массив изображений.
- */
 export function renderGallery(images) {
   const gallery = document.querySelector('#gallery');
   const markup = images
     .map(
       image => `
       <a href="${image.largeImageURL}" class="gallery-item">
-        <img src="${image.webformatURL}" alt="${image.tags}" width="360" height="200"/>
+        <img src="${image.webformatURL}" alt="${image.tags}" />
         <div class="info">
           <span><strong>Likes:</strong> ${image.likes}</span>
           <span><strong>Views:</strong> ${image.views}</span>
@@ -21,28 +17,20 @@ export function renderGallery(images) {
     .join('');
   gallery.insertAdjacentHTML('beforeend', markup);
 
-  // Инициализация SimpleLightbox
   new SimpleLightbox('.gallery-item', {
     captionsData: 'alt',
     captionDelay: 250,
   });
 }
 
-/**
- * Очищает галерею.
- */
 export function clearGallery() {
-  const gallery = document.querySelector('#gallery');
-  gallery.innerHTML = '';
+  document.querySelector('#gallery').innerHTML = '';
 }
 
-/**
- * Показывает или скрывает загрузчик.
- * @param {boolean} show - Показывать загрузчик или нет.
- */
 export function toggleLoader(show) {
-  const loader = document.querySelector('#loader');
-  if (loader) {
-    loader.classList.toggle('hidden', !show);
-  }
+  document.querySelector('#loader').classList.toggle('hidden', !show);
+}
+
+export function smoothScroll() {
+  window.scrollBy({ top: 400, behavior: 'smooth' });
 }
