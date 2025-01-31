@@ -30,6 +30,12 @@ lightbox.on('close.simplelightbox', () => {
   document.body.style.removeProperty('pointerEvents');
   document.documentElement.style.removeProperty('overflow');
   document.documentElement.style.removeProperty('position');
+
+  // Дополнительный клик для восстановления взаимодействия
+  setTimeout(() => {
+    document.body.style.pointerEvents = 'auto';
+    document.documentElement.style.pointerEvents = 'auto';
+  }, 100);
 });
 
 document.addEventListener('touchstart', function (event) {}, { passive: true });
