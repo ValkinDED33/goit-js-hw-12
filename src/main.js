@@ -18,8 +18,22 @@ const loader = document.getElementById('loader');
 const form = document.querySelector('#search-form');
 const loadMoreBtn = document.querySelector('#load-more');
 const gallery = document.querySelector('.gallery');
-let lightbox = new SimpleLightbox('.gallery a');
+
 let loadedImageIds = new Set();
+
+let lightbox = new SimpleLightbox('.gallery a', {
+  scrollZoom: false,
+});
+
+lightbox.on('close.simplelightbox', () => {
+  document.body.style.removeProperty('overflow');
+  document.body.style.removeProperty('pointerEvents');
+  document.documentElement.style.removeProperty('overflow');
+  document.documentElement.style.removeProperty('position');
+});
+
+document.addEventListener('touchstart', function (event) {}, { passive: true });
+document.addEventListener('touchmove', function (event) {}, { passive: true });
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
@@ -84,11 +98,11 @@ loadMoreBtn.addEventListener('click', async () => {
     smoothScroll();
 
     if (data.hits.length < perPage) {
+      loadMoreBtn.classList.add('hidden');
       iziToast.warning({
         title: 'Warning',
         message: "We're sorry, but you've reached the end of search results.",
       });
-      loadMoreBtn.classList.add('hidden');
     }
   } catch (error) {
     console.error('Error loading more images:', error);
