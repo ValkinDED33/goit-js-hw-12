@@ -27,18 +27,16 @@ let lightbox = new SimpleLightbox('.gallery a', {
 
 lightbox.on('close.simplelightbox', () => {
   setTimeout(() => {
-    document.body.style.overflow = 'auto';
+    document.body.style.overflow = '';
     document.body.style.pointerEvents = 'auto';
-    document.documentElement.style.overflow = 'auto';
+    document.documentElement.style.overflow = '';
     document.documentElement.style.pointerEvents = 'auto';
-    document.documentElement.style.position = 'static';
+    document.documentElement.style.position = '';
+
+    // Генерируем искусственный клик для восстановления взаимодействия
+    document.body.dispatchEvent(new Event('click', { bubbles: true }));
   }, 50);
 });
-
-setTimeout(() => {
-  document.body.style.pointerEvents = 'auto';
-  document.documentElement.style.pointerEvents = 'auto';
-}, 100);
 
 document.addEventListener('touchstart', function (event) {}, { passive: true });
 document.addEventListener('touchmove', function (event) {}, { passive: true });
