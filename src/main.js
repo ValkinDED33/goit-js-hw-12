@@ -1,47 +1,68 @@
+import axios from 'axios';
 import { fetchImages } from './js/pixabay-api.js';
 import {
   renderGallery,
   clearGallery,
   toggleLoader,
+  smoothScroll,
 } from './js/render-functions.js';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
 let query = '';
 let page = 1;
-
+const perPage = 15;
+const loader = document.getElementById('loader');
 const form = document.querySelector('#search-form');
-const searchInput = document.querySelector('#search-input');
 const loadMoreBtn = document.querySelector('#load-more');
-const gallery = document.querySelector('#gallery');
+const gallery = document.querySelector('.gallery');
+let lightbox = new SimpleLightbox('.gallery a');
+let loadedImageIds = new Set();
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
-  query = searchInput.value.trim();
-
+  query = document.querySelector('#search-input').value.trim();
   if (!query) {
-    alert('Please enter a search term.');
+    iziToast.info({ title: 'Info', message: 'Please enter a search query!' });
     return;
   }
 
   clearGallery();
+  loadedImageIds.clear();
   page = 1;
   loadMoreBtn.classList.add('hidden');
   toggleLoader(true);
 
   try {
-    const data = await fetchImages(query, page);
+    const data = await fetchImages(query, page, perPage);
     toggleLoader(false);
 
     if (data.hits.length === 0) {
-      alert('No images found. Try another query.');
+      iziToast.warning({
+        title: 'Warning',
+        message: 'Nothing found! Try another search.',
+      });
       return;
     }
 
-    renderGallery(data.hits);
+    const uniqueImages = data.hits.filter(
+      image => !loadedImageIds.has(image.id)
+    );
+    uniqueImages.forEach(image => loadedImageIds.add(image.id));
+
+    renderGallery(uniqueImages);
+    lightbox.refresh();
+    smoothScroll();
     loadMoreBtn.classList.remove('hidden');
   } catch (error) {
-    console.error('Error fetching images:', error);
+    console.error('Error loading images:', error);
     toggleLoader(false);
-    alert('Something went wrong. Please try again.');
+    iziToast.error({
+      title: 'Error',
+      message: 'Something went wrong. Please try again.',
+    });
   }
 });
 
@@ -50,22 +71,31 @@ loadMoreBtn.addEventListener('click', async () => {
   toggleLoader(true);
 
   try {
-    const data = await fetchImages(query, page);
+    const data = await fetchImages(query, page, perPage);
     toggleLoader(false);
 
-    renderGallery(data.hits);
+    const uniqueImages = data.hits.filter(
+      image => !loadedImageIds.has(image.id)
+    );
+    uniqueImages.forEach(image => loadedImageIds.add(image.id));
 
-    // Плавна прокрутка
-    const cardHeight = gallery.firstElementChild.getBoundingClientRect().height;
-    window.scrollBy({ top: cardHeight * 2, behavior: 'smooth' });
+    renderGallery(uniqueImages);
+    lightbox.refresh();
+    smoothScroll();
 
-    if (page * 15 >= data.totalHits) {
+    if (data.hits.length < perPage) {
+      iziToast.warning({
+        title: 'Warning',
+        message: "We're sorry, but you've reached the end of search results.",
+      });
       loadMoreBtn.classList.add('hidden');
-      alert("We're sorry, but you've reached the end of search results.");
     }
   } catch (error) {
     console.error('Error loading more images:', error);
     toggleLoader(false);
-    alert('Something went wrong. Please try again.');
+    iziToast.error({
+      title: 'Error',
+      message: 'Something went wrong. Please try again.',
+    });
   }
 });

@@ -6,12 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Image Search</title>
     <link rel="stylesheet" href="./css/styles.css" />
-    <!-- Подключение SimpleLightbox через CDN -->
+
+    <!-- Подключение SimpleLightbox -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/simplelightbox@2.0.0/dist/simple-lightbox.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/simplelightbox@2.0.0/dist/simple-lightbox.min.js"></script>
+
+    <!-- Подключение Toastr.js -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
   </head>
   <body>
     <header>
@@ -21,14 +34,35 @@
           id="search-input"
           placeholder="Search for images..."
         />
+        <select id="category">
+          <option value="">All Categories</option>
+          <option value="nature">Nature</option>
+          <option value="animals">Animals</option>
+          <option value="travel">Travel</option>
+        </select>
+        <select id="colors">
+          <option value="">Any Color</option>
+          <option value="grayscale">Grayscale</option>
+          <option value="red">Red</option>
+          <option value="blue">Blue</option>
+        </select>
+        <select id="image-type">
+          <option value="all">All Types</option>
+          <option value="photo">Photo</option>
+          <option value="illustration">Illustration</option>
+        </select>
         <button type="submit">Search</button>
       </form>
     </header>
+
     <main>
-      <div id="loader" class="hidden">Loading...</div>
+      <div id="loader" class="hidden">
+        <div class="spinner"></div>
+      </div>
       <section id="gallery" class="gallery"></section>
       <button id="load-more" class="load-more hidden">Load more</button>
     </main>
+
     <script type="module" src="./main.js"></script>
   </body>
 </html>
