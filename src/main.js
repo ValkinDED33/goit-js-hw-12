@@ -27,14 +27,14 @@ let lightbox = new SimpleLightbox('.gallery a', {
 
 lightbox.on('close.simplelightbox', () => {
   setTimeout(() => {
-    document.body.style.overflow = '';
+    document.body.style.overflow = 'auto';
     document.body.style.pointerEvents = 'auto';
-    document.documentElement.style.overflow = '';
+    document.documentElement.style.overflow = 'auto';
     document.documentElement.style.pointerEvents = 'auto';
-  }, 300);
+    document.documentElement.style.position = 'static';
+  }, 50);
 });
 
-// Дополнительный клик для восстановления взаимодействия
 setTimeout(() => {
   document.body.style.pointerEvents = 'auto';
   document.documentElement.style.pointerEvents = 'auto';
