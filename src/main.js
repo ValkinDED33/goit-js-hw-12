@@ -26,17 +26,19 @@ let lightbox = new SimpleLightbox('.gallery a', {
 });
 
 lightbox.on('close.simplelightbox', () => {
-  document.body.style.removeProperty('overflow');
-  document.body.style.removeProperty('pointerEvents');
-  document.documentElement.style.removeProperty('overflow');
-  document.documentElement.style.removeProperty('position');
-
-  // Дополнительный клик для восстановления взаимодействия
   setTimeout(() => {
+    document.body.style.overflow = '';
     document.body.style.pointerEvents = 'auto';
+    document.documentElement.style.overflow = '';
     document.documentElement.style.pointerEvents = 'auto';
-  }, 100);
+  }, 300);
 });
+
+// Дополнительный клик для восстановления взаимодействия
+setTimeout(() => {
+  document.body.style.pointerEvents = 'auto';
+  document.documentElement.style.pointerEvents = 'auto';
+}, 100);
 
 document.addEventListener('touchstart', function (event) {}, { passive: true });
 document.addEventListener('touchmove', function (event) {}, { passive: true });
