@@ -4,6 +4,7 @@ import {
   renderGallery,
   clearGallery,
   toggleLoader,
+  smoothScroll,
 } from './js/render-functions.js';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -19,9 +20,10 @@ const loadMoreBtn = document.querySelector('#load-more');
 const gallery = document.querySelector('.gallery');
 
 let loadedImageIds = new Set();
-
-// Создаём экземпляр SimpleLightbox в глобальной области
 let lightbox = new SimpleLightbox('.gallery a', { scrollZoom: false });
+
+document.addEventListener('touchstart', () => {}, { passive: true });
+document.addEventListener('touchmove', () => {}, { passive: true });
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
@@ -55,8 +57,11 @@ form.addEventListener('submit', async event => {
     uniqueImages.forEach(image => loadedImageIds.add(image.id));
 
     renderGallery(uniqueImages);
-    lightbox.refresh(); // Обновляем lightbox после вставки изображений
-    loadMoreBtn.classList.remove('hidden');
+    lightbox.refresh();
+
+    if (data.hits.length >= perPage) {
+      loadMoreBtn.classList.remove('hidden');
+    }
   } catch (error) {
     console.error('Error loading images:', error);
     toggleLoader(false);
@@ -80,8 +85,11 @@ loadMoreBtn.addEventListener('click', async () => {
     );
     uniqueImages.forEach(image => loadedImageIds.add(image.id));
 
-    renderGallery(uniqueImages);
-    lightbox.refresh(); // Обновляем lightbox после добавления новых изображений
+    if (uniqueImages.length > 0) {
+      renderGallery(uniqueImages);
+      lightbox.refresh();
+      smoothScroll();
+    }
 
     if (data.hits.length < perPage) {
       loadMoreBtn.classList.add('hidden');
