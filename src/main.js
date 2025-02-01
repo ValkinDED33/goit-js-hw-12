@@ -25,6 +25,16 @@ let lightbox = new SimpleLightbox('.gallery a', { scrollZoom: false });
 document.addEventListener('touchstart', () => {}, { passive: true });
 document.addEventListener('touchmove', () => {}, { passive: true });
 
+function showLoader() {
+  loader.innerHTML = '<div class="spinner"></div>';
+  loader.style.display = 'block';
+}
+
+function hideLoader() {
+  loader.innerHTML = '';
+  loader.style.display = 'none';
+}
+
 form.addEventListener('submit', async event => {
   event.preventDefault();
   query = document.querySelector('#search-input').value.trim();
@@ -37,11 +47,11 @@ form.addEventListener('submit', async event => {
   loadedImageIds.clear();
   page = 1;
   loadMoreBtn.classList.add('hidden');
-  toggleLoader(true);
+  showLoader();
 
   try {
     const data = await fetchImages(query, page, perPage);
-    toggleLoader(false);
+    hideLoader();
 
     if (data.hits.length === 0) {
       iziToast.warning({
@@ -64,7 +74,7 @@ form.addEventListener('submit', async event => {
     }
   } catch (error) {
     console.error('Error loading images:', error);
-    toggleLoader(false);
+    hideLoader();
     iziToast.error({
       title: 'Error',
       message: 'Something went wrong. Please try again.',
@@ -74,11 +84,11 @@ form.addEventListener('submit', async event => {
 
 loadMoreBtn.addEventListener('click', async () => {
   page += 1;
-  toggleLoader(true);
+  showLoader();
 
   try {
     const data = await fetchImages(query, page, perPage);
-    toggleLoader(false);
+    hideLoader();
 
     const uniqueImages = data.hits.filter(
       image => !loadedImageIds.has(image.id)
@@ -100,7 +110,7 @@ loadMoreBtn.addEventListener('click', async () => {
     }
   } catch (error) {
     console.error('Error loading more images:', error);
-    toggleLoader(false);
+    hideLoader();
     iziToast.error({
       title: 'Error',
       message: 'Something went wrong. Please try again.',

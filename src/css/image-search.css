@@ -93,10 +93,11 @@ button:hover {
 .spinner {
   width: 50px;
   height: 50px;
+  border-radius: 50%;
   border: 5px solid rgba(0, 123, 255, 0.2);
   border-top-color: #007bff;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 1s cubic-bezier(0.25, 0.1, 0.25, 1) infinite,
+    pulse 1.5s ease-in-out infinite alternate;
   margin: auto;
 }
 
@@ -109,6 +110,18 @@ button:hover {
   }
 }
 
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+/* лоадер */
 #loader {
   position: fixed;
   top: 50%;
