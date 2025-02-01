@@ -4,7 +4,6 @@ import {
   renderGallery,
   clearGallery,
   toggleLoader,
-  smoothScroll,
 } from './js/render-functions.js';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -21,25 +20,8 @@ const gallery = document.querySelector('.gallery');
 
 let loadedImageIds = new Set();
 
-let lightbox = new SimpleLightbox('.gallery a', {
-  scrollZoom: false,
-});
-
-lightbox.on('close.simplelightbox', () => {
-  setTimeout(() => {
-    document.body.style.overflow = '';
-    document.body.style.pointerEvents = 'auto';
-    document.documentElement.style.overflow = '';
-    document.documentElement.style.pointerEvents = 'auto';
-    document.documentElement.style.position = '';
-
-    // Генерируем искусственный клик для восстановления взаимодействия
-    document.body.dispatchEvent(new Event('click', { bubbles: true }));
-  }, 50);
-});
-
-document.addEventListener('touchstart', function (event) {}, { passive: true });
-document.addEventListener('touchmove', function (event) {}, { passive: true });
+// Создаём экземпляр SimpleLightbox в глобальной области
+let lightbox = new SimpleLightbox('.gallery a', { scrollZoom: false });
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
@@ -73,8 +55,7 @@ form.addEventListener('submit', async event => {
     uniqueImages.forEach(image => loadedImageIds.add(image.id));
 
     renderGallery(uniqueImages);
-    lightbox.refresh();
-    smoothScroll();
+    lightbox.refresh(); // Обновляем lightbox после вставки изображений
     loadMoreBtn.classList.remove('hidden');
   } catch (error) {
     console.error('Error loading images:', error);
@@ -100,8 +81,7 @@ loadMoreBtn.addEventListener('click', async () => {
     uniqueImages.forEach(image => loadedImageIds.add(image.id));
 
     renderGallery(uniqueImages);
-    lightbox.refresh();
-    smoothScroll();
+    lightbox.refresh(); // Обновляем lightbox после добавления новых изображений
 
     if (data.hits.length < perPage) {
       loadMoreBtn.classList.add('hidden');
