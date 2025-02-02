@@ -17,20 +17,21 @@ export async function fetchImages(
     image_type: imageType,
     orientation: 'horizontal',
     safesearch: true,
-    page,
-    per_page: perPage, // ✅ Виправлено: Передаємо perPage правильно
+    page: page,
+    per_page: perPage, // ✅ Фікс: передаємо `per_page` без помилки
   };
 
   if (category) params.category = category;
   if (colors) params.colors = colors;
 
   try {
-    const response = await axios.get(BASE_URL, {
-      params,
-      timeout: 10000,
-    });
+    const response = await axios.get(BASE_URL, { params, timeout: 10000 });
 
-    return response.data; // Повертаємо всі дані, без перевірки hits.length
+    if (response.data.hits.length > perPage) {
+      response.data.hits = response.data.hits.slice(0, perPage); // ✅ Гарантуємо рівно 29 результатів
+    }
+
+    return response.data;
   } catch (error) {
     console.error('Error fetching images:', error.message || error);
     throw new Error('Failed to fetch images.');

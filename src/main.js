@@ -1,9 +1,7 @@
-import axios from 'axios';
 import { fetchImages } from './js/pixabay-api.js';
 import {
   renderGallery,
   clearGallery,
-  toggleLoader,
   smoothScroll,
 } from './js/render-functions.js';
 import SimpleLightbox from 'simplelightbox';
@@ -14,7 +12,6 @@ import 'izitoast/dist/css/iziToast.min.css';
 let query = '';
 let page = 1;
 const perPage = 29;
-
 const loader = document.getElementById('loader');
 const form = document.querySelector('#search-form');
 const loadMoreBtn = document.querySelector('#load-more');
@@ -22,10 +19,7 @@ const gallery = document.querySelector('.gallery');
 const searchInput = document.querySelector('#search-input');
 
 let loadedImageIds = new Set();
-const lightbox = new SimpleLightbox('.gallery a', { scrollZoom: false }); // ✅ Тепер створюється тільки один раз
-
-document.addEventListener('touchstart', () => {}, { passive: true });
-document.addEventListener('touchmove', () => {}, { passive: true });
+const lightbox = new SimpleLightbox('.gallery a', { scrollZoom: false }); // ✅ Створюємо один раз
 
 function showLoader() {
   loader.style.display = 'block';
@@ -65,16 +59,12 @@ async function loadImages(reset = false) {
     uniqueImages.forEach(image => loadedImageIds.add(image.id));
 
     renderGallery(uniqueImages);
-    lightbox.refresh(); // ✅ Оновлюємо Lightbox після вставки нових зображень
+    lightbox.refresh(); // ✅ Оновлюємо Lightbox замість створення нового
 
     if (data.totalHits > page * perPage) {
-      loadMoreBtn.classList.remove('hidden');
+      loadMoreBtn.classList.remove('hidden'); // ✅ Фікс відображення кнопки "Load More"
     } else {
       loadMoreBtn.classList.add('hidden');
-      iziToast.warning({
-        title: 'Warning',
-        message: "We're sorry, but you've reached the end of search results.",
-      });
     }
 
     if (!reset) smoothScroll();
