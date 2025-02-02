@@ -1,5 +1,10 @@
+const gallery = document.querySelector('#gallery');
+let lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
+
 export function renderGallery(images) {
-  const gallery = document.querySelector('#gallery');
   const markup = images
     .map(
       image => `
@@ -15,20 +20,17 @@ export function renderGallery(images) {
     `
     )
     .join('');
-  gallery.insertAdjacentHTML('beforeend', markup);
 
-  new SimpleLightbox('.gallery-item', {
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
+  gallery.insertAdjacentHTML('beforeend', markup);
+  lightbox.refresh(); // Обновляем существующий лайтбокс
 }
 
 export function clearGallery() {
-  document.querySelector('#gallery').innerHTML = '';
+  gallery.innerHTML = '';
 }
 
 export function toggleLoader(show) {
-  document.querySelector('#loader').classList.toggle('hidden', !show);
+  document.querySelector('#loader').style.display = show ? 'block' : 'none';
 }
 
 export function smoothScroll() {

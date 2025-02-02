@@ -13,14 +13,14 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 let query = '';
 let page = 1;
-const perPage = 15;
+const perPage = 29;
 const loader = document.getElementById('loader');
 const form = document.querySelector('#search-form');
 const loadMoreBtn = document.querySelector('#load-more');
 const gallery = document.querySelector('.gallery');
 
 let loadedImageIds = new Set();
-let lightbox = new SimpleLightbox('.gallery a', { scrollZoom: false });
+const lightbox = new SimpleLightbox('.gallery a', { scrollZoom: false });
 
 document.addEventListener('touchstart', () => {}, { passive: true });
 document.addEventListener('touchmove', () => {}, { passive: true });
@@ -53,7 +53,7 @@ form.addEventListener('submit', async event => {
     const data = await fetchImages(query, page, perPage);
     hideLoader();
 
-    if (data.hits.length === 0) {
+    if (!data.hits.length) {
       iziToast.warning({
         title: 'Warning',
         message: 'Nothing found! Try another search.',
@@ -95,7 +95,7 @@ loadMoreBtn.addEventListener('click', async () => {
     );
     uniqueImages.forEach(image => loadedImageIds.add(image.id));
 
-    if (uniqueImages.length > 0) {
+    if (uniqueImages.length) {
       renderGallery(uniqueImages);
       lightbox.refresh();
       smoothScroll();

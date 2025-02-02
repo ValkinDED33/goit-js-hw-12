@@ -24,16 +24,18 @@ export async function fetchImages(
   if (colors) params.colors = colors;
 
   try {
-    const response = await axios.get(BASE_URL, { params });
+    const response = await axios.get(BASE_URL, {
+      params,
+      timeout: 10000, // Таймаут запроса 10 сек
+    });
 
-    if (response.data.hits.length === 0) {
-      toastr.warning('No images found for your query. Try something else.');
+    if (!response.data.hits.length) {
+      return { hits: [], totalHits: 0 };
     }
 
     return response.data;
   } catch (error) {
-    toastr.error('Something went wrong. Please try again.');
-    console.error(error);
+    console.error('Error fetching images:', error.message || error);
     throw new Error('Failed to fetch images.');
   }
 }
