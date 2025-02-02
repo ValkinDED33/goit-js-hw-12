@@ -1,8 +1,4 @@
 const gallery = document.querySelector('#gallery');
-let lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
 
 export function renderGallery(images) {
   const markup = images
@@ -22,7 +18,6 @@ export function renderGallery(images) {
     .join('');
 
   gallery.insertAdjacentHTML('beforeend', markup);
-  lightbox.refresh(); // Обновляем существующий лайтбокс
 }
 
 export function clearGallery() {

@@ -20,7 +20,7 @@ const loadMoreBtn = document.querySelector('#load-more');
 const gallery = document.querySelector('.gallery');
 
 let loadedImageIds = new Set();
-const lightbox = new SimpleLightbox('.gallery a', { scrollZoom: false });
+const lightbox = new SimpleLightbox('.gallery a', { scrollZoom: false }); // ✅ Виправлено: створено один раз у глобальній області
 
 document.addEventListener('touchstart', () => {}, { passive: true });
 document.addEventListener('touchmove', () => {}, { passive: true });
@@ -50,7 +50,7 @@ form.addEventListener('submit', async event => {
   showLoader();
 
   try {
-    const data = await fetchImages(query, page, perPage);
+    const data = await fetchImages(query, page, '', '', 'all', perPage);
     hideLoader();
 
     if (!data.hits.length) {
@@ -67,7 +67,7 @@ form.addEventListener('submit', async event => {
     uniqueImages.forEach(image => loadedImageIds.add(image.id));
 
     renderGallery(uniqueImages);
-    lightbox.refresh();
+    lightbox.refresh(); // ✅ Виправлено: оновлюємо Lightbox після додавання нових зображень
 
     if (data.hits.length >= perPage) {
       loadMoreBtn.classList.remove('hidden');
@@ -87,7 +87,7 @@ loadMoreBtn.addEventListener('click', async () => {
   showLoader();
 
   try {
-    const data = await fetchImages(query, page, perPage);
+    const data = await fetchImages(query, page, '', '', 'all', perPage);
     hideLoader();
 
     const uniqueImages = data.hits.filter(
@@ -97,7 +97,7 @@ loadMoreBtn.addEventListener('click', async () => {
 
     if (uniqueImages.length) {
       renderGallery(uniqueImages);
-      lightbox.refresh();
+      lightbox.refresh(); // ✅ Виправлено: оновлюємо Lightbox після вставки
       smoothScroll();
     }
 

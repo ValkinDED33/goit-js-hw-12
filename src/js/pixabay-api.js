@@ -8,7 +8,8 @@ export async function fetchImages(
   page = 1,
   category = '',
   colors = '',
-  imageType = 'all'
+  imageType = 'all',
+  perPage = 29
 ) {
   const params = {
     key: API_KEY,
@@ -16,8 +17,8 @@ export async function fetchImages(
     image_type: imageType,
     orientation: 'horizontal',
     safesearch: true,
-    per_page: 15,
     page,
+    per_page: perPage, // ✅ Виправлено: Передаємо perPage правильно
   };
 
   if (category) params.category = category;
@@ -26,14 +27,10 @@ export async function fetchImages(
   try {
     const response = await axios.get(BASE_URL, {
       params,
-      timeout: 10000, // Таймаут запроса 10 сек
+      timeout: 10000,
     });
 
-    if (!response.data.hits.length) {
-      return { hits: [], totalHits: 0 };
-    }
-
-    return response.data;
+    return response.data; // Повертаємо всі дані, без перевірки hits.length
   } catch (error) {
     console.error('Error fetching images:', error.message || error);
     throw new Error('Failed to fetch images.');
