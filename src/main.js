@@ -14,46 +14,44 @@ import 'izitoast/dist/css/iziToast.min.css';
 let query = '';
 let page = 1;
 const perPage = 29;
+
 const loader = document.getElementById('loader');
 const form = document.querySelector('#search-form');
 const loadMoreBtn = document.querySelector('#load-more');
 const gallery = document.querySelector('.gallery');
+const searchInput = document.querySelector('#search-input');
 
 let loadedImageIds = new Set();
-const lightbox = new SimpleLightbox('.gallery a', { scrollZoom: false }); // ✅ Виправлено: створено один раз у глобальній області
+const lightbox = new SimpleLightbox('.gallery a', { scrollZoom: false }); // ✅ Тепер створюється тільки один раз
 
 document.addEventListener('touchstart', () => {}, { passive: true });
 document.addEventListener('touchmove', () => {}, { passive: true });
 
 function showLoader() {
-  loader.innerHTML = '<div class="spinner"></div>';
   loader.style.display = 'block';
 }
 
 function hideLoader() {
-  loader.innerHTML = '';
   loader.style.display = 'none';
 }
 
-form.addEventListener('submit', async event => {
-  event.preventDefault();
-  query = document.querySelector('#search-input').value.trim();
-  if (!query) {
-    iziToast.info({ title: 'Info', message: 'Please enter a search query!' });
-    return;
+async function loadImages(reset = false) {
+  if (reset) {
+    page = 1;
+    clearGallery();
+    loadedImageIds.clear();
+    loadMoreBtn.classList.add('hidden');
+  } else {
+    page += 1;
   }
 
-  clearGallery();
-  loadedImageIds.clear();
-  page = 1;
-  loadMoreBtn.classList.add('hidden');
   showLoader();
 
   try {
     const data = await fetchImages(query, page, '', '', 'all', perPage);
     hideLoader();
 
-    if (!data.hits.length) {
+    if (!data || !data.hits || data.hits.length === 0) {
       iziToast.warning({
         title: 'Warning',
         message: 'Nothing found! Try another search.',
@@ -67,11 +65,19 @@ form.addEventListener('submit', async event => {
     uniqueImages.forEach(image => loadedImageIds.add(image.id));
 
     renderGallery(uniqueImages);
-    lightbox.refresh(); // ✅ Виправлено: оновлюємо Lightbox після додавання нових зображень
+    lightbox.refresh(); // ✅ Оновлюємо Lightbox після вставки нових зображень
 
-    if (data.hits.length >= perPage) {
+    if (data.totalHits > page * perPage) {
       loadMoreBtn.classList.remove('hidden');
+    } else {
+      loadMoreBtn.classList.add('hidden');
+      iziToast.warning({
+        title: 'Warning',
+        message: "We're sorry, but you've reached the end of search results.",
+      });
     }
+
+    if (!reset) smoothScroll();
   } catch (error) {
     console.error('Error loading images:', error);
     hideLoader();
@@ -80,40 +86,16 @@ form.addEventListener('submit', async event => {
       message: 'Something went wrong. Please try again.',
     });
   }
-});
+}
 
-loadMoreBtn.addEventListener('click', async () => {
-  page += 1;
-  showLoader();
-
-  try {
-    const data = await fetchImages(query, page, '', '', 'all', perPage);
-    hideLoader();
-
-    const uniqueImages = data.hits.filter(
-      image => !loadedImageIds.has(image.id)
-    );
-    uniqueImages.forEach(image => loadedImageIds.add(image.id));
-
-    if (uniqueImages.length) {
-      renderGallery(uniqueImages);
-      lightbox.refresh(); // ✅ Виправлено: оновлюємо Lightbox після вставки
-      smoothScroll();
-    }
-
-    if (data.hits.length < perPage) {
-      loadMoreBtn.classList.add('hidden');
-      iziToast.warning({
-        title: 'Warning',
-        message: "We're sorry, but you've reached the end of search results.",
-      });
-    }
-  } catch (error) {
-    console.error('Error loading more images:', error);
-    hideLoader();
-    iziToast.error({
-      title: 'Error',
-      message: 'Something went wrong. Please try again.',
-    });
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  query = searchInput.value.trim();
+  if (!query) {
+    iziToast.info({ title: 'Info', message: 'Please enter a search query!' });
+    return;
   }
+  loadImages(true);
 });
+
+loadMoreBtn.addEventListener('click', () => loadImages(false));
